@@ -24,21 +24,21 @@
 
 <body class="text-center flex flex-col flex-grow items-center bg-neutral-900 h-dvh">
 
-     <div
+     <main id ="container"
           class="p-5 m-5 pt-3 rounded-lg flex-col items-center justify-center bg-neutral-800 border border-neutral-700 shadow-2xl md:border-t-4 md:border-t-orange-300">
           <div class="flex items-start min-w-full md:justify-self-start">
                <div class="flex items-start flex-grow">
                     <img id="logo" src="./src/asset/favicon.png" class="inline w-5 mr-2 mt-0.5">
                     <h1 class="inline mb-3 text-white font-bold">qr.kace.dev</h1>
                </div>
-               <div
-                    class="flex items-end flex-grow-0 hover:text-orange-200 hover:cursor-pointer transition duration-200">
-                    <a href="https://github.com/userkace/qr">
-                         <h1 class="hidden text-zinc-300 md:inline">github</h1>
+               <div class="flex items-end flex-grow-0 transition duration-200">
+                    <a href="https://github.com/userkace/qr" class="hover:text-orange-200 hover:cursor-pointer">
+                        <h1 class="hidden text-zinc-300 md:inline">github</h1>
                     </a>
-                    <a href="https://github.com/userkace/qr" class="inline w-5 mt-1 md:mt-0 md:mb-0.5 ml-2"><ion-icon
-                              name="logo-github" class="inline text-white md:text-zinc-300"></ion-icon></a>
-               </div>
+                    <a href="https://github.com/userkace/qr" class="inline w-5 mt-1 md:mt-0 md:mb-0.5 ml-2 hover:text-orange-200 hover:cursor-pointer">
+                        <ion-icon name="logo-github" class="inline text-white md:text-zinc-300"></ion-icon>
+                    </a>
+                </div>
           </div>
           <pill id="pill" class="flex mb-4 rounded-lg h-1 bg-orange-300 w-full md:opacity-0 md:h-0 md:m-0"></pill>
           <div class="md:grid md:grid-cols-2">
@@ -110,7 +110,7 @@
                style="width:14.75rem;">
                <img id="outQR" class="mx-auto" src="./src/asset/478.gif" alt="qr code generated">
           </div>
-     </div>
+     </main>
 
      <footer id="footer"
           class="p-3 mb-5 mt-auto rounded-lg flex-col items-center justify-center bg-neutral-800 border border-neutral-700 shadow-2xl text-white"

@@ -151,11 +151,6 @@ function dlQR(options = {}) {
 }
 
 function easterEgg() {
-     const pill = document.getElementById("pill");
-     const logo = document.getElementById("logo");
-     logo.src = "./src/asset/favicon-p.png";
-     pill.style.backgroundColor = "rgb(249 168 212 / var(--tw-bg-opacity))";
-     document.getElementById("submit").style.backgroundColor = "rgb(249 168 212 / var(--tw-bg-opacity))";
      elements.footer.innerHTML = "Made with 🩷";
 }
 
