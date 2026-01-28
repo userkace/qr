@@ -170,7 +170,7 @@ function getUrlParameters() {
 
 function handleUrlParameters() {
      const params = getUrlParameters();
-     
+
      if (params.link || params.text || params.wifi || params.email || (params.ssid && params.password)) {
           // Set color and background from parameters if provided
           if (params.color) {
@@ -179,7 +179,7 @@ function handleUrlParameters() {
           if (params.bg) {
                elements.bg.value = params.bg.startsWith('#') ? params.bg : `#${params.bg}`;
           }
-          
+
           if (params.link) {
                elements.inputOpt.value = 'link';
                elements.inLink.value = params.link;
@@ -198,13 +198,21 @@ function handleUrlParameters() {
                elements.inPass.value = params.password || '';
                toggleInputVisibility('wifi');
           }
-          
+
           // Auto-generate QR code
           setTimeout(() => {
                genQR({
                     bg: elements.bg.value,
                     color: elements.color.value
                });
+
+               // Auto-download after QR is generated
+               setTimeout(() => {
+                    dlQR({
+                         bg: elements.bg.value,
+                         color: elements.color.value
+                    });
+               }, 1000); // Wait 2 seconds for QR to load
           }, 100);
      }
 }
