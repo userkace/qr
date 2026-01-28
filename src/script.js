@@ -151,7 +151,49 @@ function dlQR(options = {}) {
 }
 
 function easterEgg() {
-     elements.footer.innerHTML = "Made with 🩷";
+     elements.footer.innerHTML = "Made with ";
+}
+
+function getUrlParameters() {
+     const params = new URLSearchParams(window.location.search);
+     return {
+          link: params.get('link'),
+          text: params.get('text'),
+          color: params.get('color'),
+          bg: params.get('bg')
+     };
+}
+
+function handleUrlParameters() {
+     const params = getUrlParameters();
+     
+     if (params.link || params.text) {
+          // Set color and background from parameters if provided
+          if (params.color) {
+               elements.color.value = params.color.startsWith('#') ? params.color : `#${params.color}`;
+          }
+          if (params.bg) {
+               elements.bg.value = params.bg.startsWith('#') ? params.bg : `#${params.bg}`;
+          }
+          
+          if (params.link) {
+               elements.inputOpt.value = 'link';
+               elements.inLink.value = params.link;
+               toggleInputVisibility('link');
+          } else if (params.text) {
+               elements.inputOpt.value = 'text';
+               elements.inText.value = params.text;
+               toggleInputVisibility('text');
+          }
+          
+          // Auto-generate QR code
+          setTimeout(() => {
+               genQR({
+                    bg: elements.bg.value,
+                    color: elements.color.value
+               });
+          }, 100);
+     }
 }
 
 // Event listeners
@@ -159,3 +201,6 @@ elements.inputOpt.addEventListener('change', resetInputFields);
 elements.inputOpt.addEventListener('change', (event) => toggleInputVisibility(event.target.value));
 elements.inMail.addEventListener('keyup', validateEmail);
 inputFields.forEach(inputField => inputField.addEventListener('keydown', handleEnterKey));
+
+// Handle URL parameters when page loads
+document.addEventListener('DOMContentLoaded', handleUrlParameters);
