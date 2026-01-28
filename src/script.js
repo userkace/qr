@@ -151,7 +151,7 @@ function dlQR(options = {}) {
 }
 
 function easterEgg() {
-     elements.footer.innerHTML = "Made with ";
+     elements.footer.innerHTML = "Made with 🩷";
 }
 
 function getUrlParameters() {
