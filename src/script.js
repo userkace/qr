@@ -159,6 +159,10 @@ function getUrlParameters() {
      return {
           link: params.get('link'),
           text: params.get('text'),
+          wifi: params.get('wifi'),
+          ssid: params.get('ssid'),
+          password: params.get('password'),
+          email: params.get('email'),
           color: params.get('color'),
           bg: params.get('bg')
      };
@@ -167,7 +171,7 @@ function getUrlParameters() {
 function handleUrlParameters() {
      const params = getUrlParameters();
      
-     if (params.link || params.text) {
+     if (params.link || params.text || params.wifi || params.email || (params.ssid && params.password)) {
           // Set color and background from parameters if provided
           if (params.color) {
                elements.color.value = params.color.startsWith('#') ? params.color : `#${params.color}`;
@@ -184,6 +188,15 @@ function handleUrlParameters() {
                elements.inputOpt.value = 'text';
                elements.inText.value = params.text;
                toggleInputVisibility('text');
+          } else if (params.email) {
+               elements.inputOpt.value = 'mail';
+               elements.inMail.value = params.email;
+               toggleInputVisibility('mail');
+          } else if (params.wifi || (params.ssid && params.password)) {
+               elements.inputOpt.value = 'wifi';
+               elements.inSSID.value = params.ssid || params.wifi;
+               elements.inPass.value = params.password || '';
+               toggleInputVisibility('wifi');
           }
           
           // Auto-generate QR code
