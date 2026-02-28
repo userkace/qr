@@ -14,6 +14,35 @@
   }
 }
 
+/* Enhanced focus indicators for accessibility */
+.focus-visible:focus {
+  @apply outline-2 outline-offset-2 outline-brand;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-card {
+    @apply border-2 border-white;
+  }
+  
+  .text-gray-400 {
+    @apply text-white;
+  }
+  
+  .text-gray-500 {
+    @apply text-white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -26,6 +55,29 @@
   border-radius: 10px;
 }
 
+/* Screen reader only class with better focus */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQR } from './hooks/useQR';
+import { useTranslations } from './hooks/useTranslations';
+import { generateId } from './utils/accessibility';
 import {
   Link as LinkIcon,
   Wifi,
@@ -18,8 +20,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const TabType = ['url', 'wifi', 'phone', 'email', 'location', 'vcard'];
 
-
 export default function App() {
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState('url');
   const [formData, setFormData] = useState({
     url: '',
@@ -44,6 +46,13 @@ export default function App() {
   const [bgColor, setBgColor] = useState('#FFFFFF');
   const [logoUrl, setLogoUrl] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
+
+  // Generate unique IDs for accessibility
+  const tabPanelId = generateId('tab-panel');
+  const logoDescId = generateId('logo-desc');
+  const autoUpdateId = generateId('auto-update');
+  const fgColorDescId = generateId('fg-color-desc');
+  const bgColorDescId = generateId('bg-color-desc');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -236,33 +245,38 @@ export default function App() {
       >
         <div className="bg-card rounded-2xl shadow-2xl overflow-hidden border border-white/5">
           {/* Tabs Navigation */}
-          <nav className="flex border-b border-white/10 px-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
+          <nav className="flex border-b border-white/10 px-6 overflow-x-auto whitespace-nowrap scrollbar-hide" role="tablist">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                aria-label={t(`tabs.${tab.id}`)}
+                aria-controls={tabPanelId}
                 className={`px-4 py-5 text-sm font-medium transition-colors flex items-center gap-2 relative bg-card cursor-pointer focus:outline-none focus:ring-0 ${
                   activeTab === tab.id ? 'text-brand' : 'text-gray-400 hover:text-brand'
-                }`}
+                } focus-visible:after:absolute focus-visible:after:bottom-0 focus-visible:after:left-0 focus-visible:after:right-0 focus-visible:after:h-0.5 focus-visible:after:bg-gray-500 focus-visible:after:z-10`}
               >
                 <tab.icon size={16} />
                 {tab.label}
                 {activeTab === tab.id && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand z-20"
                   />
                 )}
               </button>
             ))}
           </nav>
-
           <div className="flex flex-col md:flex-row">
             {/* Input Area */}
             <section className="flex-1 p-8 border-r border-white/10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
+                  role="tabpanel"
+                  id={tabPanelId}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
@@ -275,6 +289,7 @@ export default function App() {
                         name="url"
                         value={formData.url}
                         onChange={handleInputChange}
+                        aria-label={t('inputs.url')}
                         className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all placeholder-gray-600"
                         placeholder="Enter text or paste a link..."
                         rows={2}
@@ -291,6 +306,7 @@ export default function App() {
                           name="wifiSsid"
                           value={formData.wifiSsid}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.wifiSsid')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="e.g. MyHomeNetwork"
                         />
@@ -302,6 +318,7 @@ export default function App() {
                           name="wifiPass"
                           value={formData.wifiPass}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.wifiPass')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="••••••••"
                         />
@@ -313,6 +330,8 @@ export default function App() {
                             name="wifiEnc"
                             value={formData.wifiEnc}
                             onChange={handleInputChange}
+                            aria-label={t('inputs.wifiEnc')}
+                            aria-expanded="false"
                             className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all appearance-none pr-10"
                           >
                             <option value="WPA">WPA/WPA2</option>
@@ -333,6 +352,7 @@ export default function App() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        aria-label={t('inputs.phone')}
                         className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                         placeholder="+1 (555) 000-0000"
                       />
@@ -348,6 +368,7 @@ export default function App() {
                           name="emailRecipient"
                           value={formData.emailRecipient}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.emailRecipient')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="hello@example.com"
                         />
@@ -359,6 +380,7 @@ export default function App() {
                           name="emailSubject"
                           value={formData.emailSubject}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.emailSubject')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="Contacting via QR"
                         />
@@ -369,6 +391,7 @@ export default function App() {
                           name="emailBody"
                           value={formData.emailBody}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.emailBody')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all placeholder-gray-600"
                           placeholder="Enter email message content..."
                           rows={4}
@@ -387,6 +410,7 @@ export default function App() {
                             name="lat"
                             value={formData.lat}
                             onChange={handleInputChange}
+                            aria-label={t('inputs.lat')}
                             className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                             placeholder="0.0000"
                           />
@@ -398,6 +422,7 @@ export default function App() {
                             name="lng"
                             value={formData.lng}
                             onChange={handleInputChange}
+                            aria-label={t('inputs.lng')}
                             className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                             placeholder="0.0000"
                           />
@@ -410,6 +435,7 @@ export default function App() {
                           name="locationName"
                           value={formData.locationName}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.locationName')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="Olongapo City, Philippines"
                         />
@@ -427,6 +453,7 @@ export default function App() {
                             name="vcardFirstName"
                             value={formData.vcardFirstName}
                             onChange={handleInputChange}
+                            aria-label={t('inputs.vcardFirstName')}
                             className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                             placeholder="John"
                           />
@@ -438,6 +465,7 @@ export default function App() {
                             name="vcardLastName"
                             value={formData.vcardLastName}
                             onChange={handleInputChange}
+                            aria-label={t('inputs.vcardLastName')}
                             className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                             placeholder="Doe"
                           />
@@ -450,6 +478,7 @@ export default function App() {
                           name="vcardOrganization"
                           value={formData.vcardOrganization}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.vcardOrganization')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="Company Inc."
                         />
@@ -461,6 +490,7 @@ export default function App() {
                           name="vcardPhone"
                           value={formData.vcardPhone}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.vcardPhone')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="+1234567890"
                         />
@@ -472,6 +502,7 @@ export default function App() {
                           name="vcardEmail"
                           value={formData.vcardEmail}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.vcardEmail')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="john@example.com"
                         />
@@ -483,6 +514,7 @@ export default function App() {
                           name="vcardWebsite"
                           value={formData.vcardWebsite}
                           onChange={handleInputChange}
+                          aria-label={t('inputs.vcardWebsite')}
                           className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all"
                           placeholder="https://example.com"
                         />
@@ -499,16 +531,18 @@ export default function App() {
                     type="text"
                     value={logoUrl}
                     onChange={(e) => setLogoUrl(e.target.value)}
+                    aria-label={t('inputs.logoUrl')}
+                    aria-describedby={logoDescId}
                     className="w-full bg-dark border border-white/10 rounded-xl p-4 text-white focus:ring-brand focus:border-brand outline-none transition-all placeholder-gray-600 pl-11"
                     placeholder="https://example.com/logo.png"
                   />
                   <ImageIcon size={18} className="absolute left-4 text-gray-500" />
                 </div>
-                <p className="text-[10px] text-gray-600 mt-2">Recommended: Square PNG with background matching your QR background color.</p>
+                <p id={logoDescId} className="text-[10px] text-gray-600 mt-2">{t('descriptions.logoRecommendation')}</p>
               </div>
 
               <div className="mt-8">
-                <p className="text-xs text-gray-400">QR code updates automatically as you type.</p>
+                <p id={autoUpdateId} className="text-xs text-gray-400">{t('descriptions.autoUpdate')}</p>
               </div>
             </section>
 
@@ -532,14 +566,15 @@ export default function App() {
                 </div>
 
                 <div className="w-full space-y-4 mb-8">
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Foreground</label>
+                  <div className="flex flex-col space-y-2" role="group" aria-labelledby={fgColorDescId}>
+                    <label id={fgColorDescId} className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Foreground</label>
                     <div className="flex items-center space-x-2">
                       <div className="relative flex items-center bg-dark border border-white/10 rounded-lg p-1.5 flex-1">
                         <input
                           type="color"
                           value={fgColor}
                           onChange={(e) => setFgColor(e.target.value)}
+                          aria-label={t('colors.foreground')}
                           className="w-6 h-6 border-none bg-transparent cursor-pointer rounded overflow-hidden p-0"
                         />
                         <input
@@ -552,6 +587,7 @@ export default function App() {
                               setFgColor(value);
                             }
                           }}
+                          aria-label={t('colors.foregroundHex')}
                           placeholder="#000000"
                           className="ml-2 bg-transparent border-none outline-none text-[12px] font-mono text-gray-400 uppercase w-20"
                           maxLength={7}
@@ -559,14 +595,15 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Background</label>
+                  <div className="flex flex-col space-y-2" role="group" aria-labelledby={bgColorDescId}>
+                    <label id={bgColorDescId} className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Background</label>
                     <div className="flex items-center space-x-2">
                       <div className="relative flex items-center bg-dark border border-white/10 rounded-lg p-1.5 flex-1">
                         <input
                           type="color"
                           value={bgColor}
                           onChange={(e) => setBgColor(e.target.value)}
+                          aria-label={t('colors.background')}
                           className="w-6 h-6 border-none bg-transparent cursor-pointer rounded overflow-hidden p-0"
                         />
                         <input
@@ -579,6 +616,7 @@ export default function App() {
                               setBgColor(value);
                             }
                           }}
+                          aria-label={t('colors.backgroundHex')}
                           placeholder="#FFFFFF"
                           className="ml-2 bg-transparent border-none outline-none text-[12px] font-mono text-gray-400 uppercase w-20"
                           maxLength={7}
@@ -592,6 +630,8 @@ export default function App() {
               <button
                 onClick={handleDownload}
                 disabled={isDownloading || isInputsEmpty()}
+                aria-label={isDownloading ? t('buttons.downloading') : isInputsEmpty() ? t('buttons.enterContent') : t('buttons.download')}
+                aria-busy={isDownloading}
                 className="w-full hover:bg-opacity-90 text-black bg-brand! cursor-pointer font-bold py-4 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {(isDownloading || isInputsEmpty()) ? (
