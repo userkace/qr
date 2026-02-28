@@ -556,6 +556,7 @@ export default function App() {
                     <img
                       src={qrUrl}
                       alt="QR Code"
+                      fetchpriority="high"
                       className="w-[200px] h-[200px] rounded-2xl"
                     />
                   ) : (
